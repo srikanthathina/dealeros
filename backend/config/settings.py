@@ -27,9 +27,13 @@ SECRET_KEY = os.environ.get(
 )
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get("DJANGO_DEBUG", "true").strip().lower() in {
+    "true",
+    "1",
+    "yes",
+}
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [".onrender.com", "127.0.0.1", "localhost"]
 
 
 # Application definition
@@ -49,6 +53,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -57,7 +62,15 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-CORS_ALLOW_ALL_ORIGINS = True
+cors_allowed_origins = os.environ.get("CORS_ALLOWED_ORIGINS", "").strip()
+if cors_allowed_origins:
+    CORS_ALLOWED_ORIGINS = [
+        origin.strip().rstrip("/")
+        for origin in cors_allowed_origins.split(",")
+        if origin.strip()
+    ]
+else:
+    CORS_ALLOW_ALL_ORIGINS = True
 
 ROOT_URLCONF = 'config.urls'
 
@@ -125,6 +138,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.1/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = BASE_DIR / "staticfiles"
 
 
 # Email
