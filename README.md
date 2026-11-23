@@ -47,6 +47,9 @@ Open the Vite URL (normally `http://127.0.0.1:5173/`). The API is at `http://127
 ## Deployment
 
 The app can be deployed as two services:
+## Live Deployment
+- **Frontend (Vercel):** https://frontend-alpha-lovat-27.vercel.app/
+- **Backend API (Render):** https://dealeros-g0u5.onrender.com/api/orgs/
 
 - **Render (Django):** Use the repository root as the service root. Build command: `pip install -r requirements.txt && python backend/manage.py collectstatic --noinput && python backend/manage.py migrate && python backend/manage.py import_data`. Start command: `cd backend && gunicorn config.wsgi:application --bind 0.0.0.0:$PORT`. Set `DJANGO_SECRET_KEY` to a generated secret, `DJANGO_DEBUG=false`, and `CORS_ALLOWED_ORIGINS` to the deployed Vercel origin (comma-separated if there are multiple).
 - **Vercel (Vite):** Set the project root directory to `frontend`, use `npm run build` as the build command and `dist` as the output directory. Set `VITE_API_BASE_URL` to the Render service origin, with no trailing slash.
